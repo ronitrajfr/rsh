@@ -55,17 +55,26 @@ int main(int argc, char *argv[])
       printf("\n");
     }
 
+    // CD COMMAND
     else if (strcmp(argv[0], "cd") == 0)
     {
-      if (chdir(argv[1]) == 0)
+      if (argv[1] && strcmp(argv[1], "~") == 0)
       {
-        printf("Changed directory to %s successfully.\n", argv[1]);
+        const char *home = getenv("HOME"); 
+        if (chdir(home) == 0)
+          printf("Changed directory to home successfully.\n");
+        else
+          perror("chdir failed");
       }
-      else
+      else if (argv[1])
       {
-        perror("chdir failed");
+        if (chdir(argv[1]) == 0)
+          printf("Changed directory to %s successfully.\n", argv[1]);
+        else
+          perror("chdir failed");
       }
     }
+    
 
     // TYPE COMMAND
 
