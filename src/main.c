@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <limits.h>
 
 int main(int argc, char *argv[])
 {
@@ -12,7 +13,11 @@ int main(int argc, char *argv[])
 
   while (true)
   {
-    printf("$ ");
+
+    char cwd[1024];
+    getcwd(cwd, sizeof(cwd));
+    printf("$%s ", cwd);
+    // printf("$ ");
     char input[100];
     fgets(input, 100, stdin);
     input[strcspn(input, "\n")] = '\0';
@@ -48,6 +53,18 @@ int main(int argc, char *argv[])
       for (int j = 1; argv[j] != NULL; j++)
         printf("%s ", argv[j]);
       printf("\n");
+    }
+
+    else if (strcmp(argv[0], "cd") == 0)
+    {
+      if (chdir(argv[1]) == 0)
+      {
+        printf("Changed directory to %s successfully.\n", argv[1]);
+      }
+      else
+      {
+        perror("chdir failed");
+      }
     }
 
     // TYPE COMMAND
